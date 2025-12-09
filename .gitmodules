@@ -1,10 +1,10 @@
 [submodule "Hamlib"]
 	path = Hamlib
-	url = https://github.com/Chris-AC9KH/Hamlib.git
+	url = https://github.com/JS8Call-improved/Hamlib.git
 [submodule "libusb"]
 	path = libusb
-	url = https://github.com/Chris-AC9KH/libusb.git
+	url = https://github.com/JS8Call-improved/libusb.git
 [submodule "Qt6"]
         path = Qt6
         url = https://github.com/qt/qt5.git
-        branch = 6.6.3
+        branch = 6.9.3
