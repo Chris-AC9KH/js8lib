@@ -3,7 +3,7 @@
 - This repository is only for JS8Call developers to build and package pre-built libraries for JS8Call. It is not intended for end users
 to build the code.
 - The base repository contains the source code for FFTW-3.3.10 and Boost 1.88.0
-- Hamlib v4.6.4, libusb-1.0.29 are obtained as submodules with `git submodule update --init --recursive' by
+- Hamlib v4.6.5, libusb-1.0.29 are obtained as submodules with `git submodule update --init --recursive' by
 running the BUILD.sh script for MacOS. Building Qt 6.9.3 is optional.
 - Note the script will ask if you are building universal or architecture-dependent libraries. If you are on an Intel Mac you must select
 no or the build will fail.
@@ -13,7 +13,7 @@ no or the build will fail.
 accomplish this: `sudo mkdir /usr/local/js8lib && chown <your_username> /usr/local/js8lib`
 - cd into your development root folder which can be anything you wish and clone this repository with:
 ```
-git clone https://github.com/Chris-AC9KH/js8lib.git submodules
+git clone https://github.com/JS8Call-improved/js8lib.git submodules
 ```
 - cd into submodules and run the BUILD.sh script with `./BUILD.sh`. If the build is successful it will create a gzipped tar archive of the
 library build in the root of your development folder. Depending on the capabilities of your build machine this can take a long time.
