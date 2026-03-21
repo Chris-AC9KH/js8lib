@@ -19,10 +19,7 @@ PREFIX="/usr/local/js8lib"
 ARCH="$(uname -m)"
 PLATFORM="$(uname)"
 
-echo "You can choose here whether to build universal libraries or only for your"
-echo "present architecture (Intel or Apple silicon). Building universal is not"
-echo "recommended unless you have a need to deploy across both platforms."
-read -p "Build Universal libraries for both Intel and Apple silicon? Yes(y) / No(n):- " choice
+choice="n"
 
 cd ${SUBMODULES} && git submodule update --init --recursive
 
@@ -56,7 +53,7 @@ fi
     make clean
     clear
     echo "--------------------------------------------------------------------"
-    echo "         Hamlib-v4.6.5 build successful........."
+    echo "         Hamlib-v4.7.0 build successful........."
     echo "--------------------------------------------------------------------"
     sleep 5
 
