@@ -95,13 +95,13 @@ read -p "Build Qt6 from git sources? Select No if using external Qt build: Yes(y
 if [ "$qt" = "y" ]; then
 ####### Build Qt6 #######
     cd ${SUBMODULES} && git clone https://github.com/qt/qt5.git Qt6
-    cd Qt6 && git checkout 6.9.3
+    cd Qt6 && git checkout 6.8.3
     ./init-repository --module-subset=qtbase,qtshadertools,qtmultimedia,qtimageformats,qtserialport,qtsvg
     cd .. && mkdir qt6-build && cd qt6-build
     if [ "$choice" = "y" ]; then
         ${SUBMODULES}/Qt6/configure -prefix ${PREFIX} -submodules qtbase,qtshadertools,qtimageformats,qtserialport,qtsvg,qtmultimedia -ffmpeg-dir /usr/local/ffmpeg -ffmpeg-deploy -- -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
     else
-        ${SUBMODULES}/Qt6/configure -prefix ${PREFIX} -submodules qtbase,qtshadertools,qtimageformats,qtserialport,qtsvg,qtmultimedia -ffmpeg-dir /usr/local/ffmpeg -ffmpeg-deploy
+        ${SUBMODULES}/Qt6/configure -DFFMPEG_DIR=/usr/local/ffmpeg -prefix ${PREFIX} -submodules qtbase,qtshadertools,qtimageformats,qtserialport,qtsvg,qtmultimedia
     fi
     cmake --build . --parallel
     cmake --install .
