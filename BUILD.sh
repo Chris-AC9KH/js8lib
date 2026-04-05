@@ -1,7 +1,7 @@
 #!/bin/sh
 clear
 # make sure we have the necessary tools installed to build libraries
-sudo apt install build-essential pkgconf autoconf libtool automake
+sudo apt install build-essential pkgconf autoconf libtool automake texinfo
 clear
 echo "--------------------------------------------------------------------"
 echo "         Building js8lib........."
