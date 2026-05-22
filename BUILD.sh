@@ -53,7 +53,7 @@ fi
     make clean
     clear
     echo "--------------------------------------------------------------------"
-    echo "         Hamlib-v4.7.0 build successful........."
+    echo "         Hamlib-v4.7.1 build successful........."
     echo "--------------------------------------------------------------------"
     sleep 5
 
@@ -76,16 +76,12 @@ fi
 ####### Build boost #######
 cd ../boost
 ./bootstrap.sh --prefix=${PREFIX}
-if [ "$choice" = "y" ]; then
-    ./b2 cxxflags="-mmacosx-version-min=12.0" -a address-model=64 architecture=arm+x86 install
-else
-    ./b2 cxxflags="-mmacosx-version-min=12.0" -a install
-fi
-    clear
-    echo "--------------------------------------------------------------------"
-    echo "         boost-v1.88.0 build successful........."
-    echo "--------------------------------------------------------------------"
-    sleep 5
+./b2 install --with-headers
+clear
+echo "--------------------------------------------------------------------"
+echo "         boost-v1.88.0 header copy successful........."
+echo "--------------------------------------------------------------------"
+sleep 5
 
 read -p "Build Qt6 from git sources? Select No if using external Qt build: Yes(y) / No(n):- " qt
 
