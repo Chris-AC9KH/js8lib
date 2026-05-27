@@ -16,25 +16,14 @@ fi
 # set variables
 SUBMODULES=$(PWD)
 PREFIX="/usr/local/js8lib"
-ARCH="$(uname -m)"
-PLATFORM="$(uname)"
-
-echo "You can choose here whether to build universal libraries or only for your"
-echo "present architecture (Intel or Apple silicon). Building universal is not"
-echo "recommended unless you have a need to deploy across both platforms."
-read -p "Build Universal libraries for both Intel and Apple silicon? Yes(y) / No(n):- " choice
+LIB_VERSION="3.0"
 
 cd ${SUBMODULES} && git submodule update --init --recursive
 
 ####### Build libusb #######
 cd ${SUBMODULES}/libusb
-if [ "$choice" = "y" ]; then
     ./bootstrap.sh
-    ./configure CFLAGS="-arch arm64 -arch x86_64 -mmacosx-version-min=12.0" --prefix=${PREFIX}
-else
-    ./bootstrap.sh
-    ./configure CFLAGS="-mmacosx-version-min=12.0" --prefix=${PREFIX}
-fi
+    ./configure CFLAGS="-mmacosx-version-min=14.0" --prefix=${PREFIX}
     make && make install
     make clean
     clear
@@ -45,13 +34,8 @@ fi
 
 ####### Build Hamlib #######
 cd ../Hamlib
-if [ "$choice" = "y" ]; then
     ./bootstrap
-    ./configure CFLAGS="-arch arm64 -arch x86_64 -mmacosx-version-min=12.0" --prefix=${PREFIX}
-else
-    ./bootstrap
-    ./configure CFLAGS="-mmacosx-version-min=12.0" --prefix=${PREFIX}
-fi
+    ./configure CFLAGS="-mmacosx-version-min=14.0" --prefix=${PREFIX}
     make && make install
     make clean
     clear
@@ -62,11 +46,7 @@ fi
 
 ####### Build fftw #######
 cd ../fftw
-if [ "$choice" = "y" ]; then
-    ./configure CFLAGS="-arch arm64 -arch x86_64 -mmacosx-version-min=12.0" --prefix=${PREFIX} --enable-single --enable-threads
-else
-    ./configure CFLAGS="-mmacosx-version-min=12.0" --prefix=${PREFIX} --enable-single --enable-threads
-fi
+    ./configure CFLAGS="-mmacosx-version-min=14.0" --prefix=${PREFIX} --enable-single --enable-threads
     make && make install
     make clean
     clear
@@ -74,7 +54,6 @@ fi
     echo "         fftw-v3.3.10 build successful........."
     echo "--------------------------------------------------------------------"
     sleep 5
-
 
 ####### Build boost #######
 cd ../boost
@@ -95,11 +74,7 @@ if [ "$qt" = "y" ]; then
     cd Qt6 && git checkout 6.9.3
     ./init-repository --module-subset=qtbase,qtshadertools,qtmultimedia,qtimageformats,qtserialport,qtsvg
     cd .. && mkdir qt6-build && cd qt6-build
-    if [ "$choice" = "y" ]; then
-        ${SUBMODULES}/Qt6/configure -prefix ${PREFIX} -submodules qtbase,qtshadertools,qtimageformats,qtserialport,qtsvg,qtmultimedia -ffmpeg-dir /usr/local/ffmpeg -ffmpeg-deploy -- -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
-    else
         ${SUBMODULES}/Qt6/configure -prefix ${PREFIX} -submodules qtbase,qtshadertools,qtimageformats,qtserialport,qtsvg,qtmultimedia -ffmpeg-dir /usr/local/ffmpeg -ffmpeg-deploy
-    fi
     cmake --build . --parallel
     cmake --install .
     
@@ -142,10 +117,10 @@ cd ${SUBMODULES}/..
 rsync -arvz /usr/local/js8lib/ ./js8lib/
 
 # create downloadable pre-built library archive
-if [ "$choice" = "y" ]; then
-    tar -czvf js8lib-MacOS_universal.tar.gz js8lib
+if [ "$qt" = "y" ]; then
+    tar -czvf js8lib${LIB_VERSION}-MacOS_AppleSilicon_Qt.tar.gz js8lib
 else
-    tar -czvf js8lib-MacOS_${ARCH}.tar.gz js8lib
+    tar -czvf js8lib${LIB_VERSION}-MacOS_AppleSilicon.tar.gz js8lib
 fi
 
 # clean up build artifacts
