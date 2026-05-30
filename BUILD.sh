@@ -44,7 +44,7 @@ make && make install
 make clean
 clear
 echo "--------------------------------------------------------------------"
-echo "         Hamlib-v4.7.0 build successful........."
+echo "         Hamlib-v4.7.1 build successful........."
 echo "--------------------------------------------------------------------"
 sleep 5
 
@@ -63,10 +63,10 @@ sleep 5
 ####### Build boost #######
 cd ../boost
 ./bootstrap.sh --prefix=${PREFIX}
-./b2 -a install
+./b2 install --with-headers
 clear
 echo "--------------------------------------------------------------------"
-echo "         boost-v1.88.0 build successful........."
+echo "         boost-v1.88.0 header copy successful........."
 echo "--------------------------------------------------------------------"
 sleep 5
 
