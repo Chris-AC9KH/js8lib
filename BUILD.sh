@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 clear
 # make sure we have the necessary tools installed to build libraries
 sudo apt install build-essential pkgconf autoconf libtool automake texinfo
