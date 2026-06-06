@@ -108,8 +108,7 @@ sleep 3
 
 # --- Clean up submodule build artifacts ---
 cd "${SUBMODULES}"
-git clean -fdx
-git restore .
+git submodule foreach --recursive git clean -fdx
 cd ..
 
 clear
