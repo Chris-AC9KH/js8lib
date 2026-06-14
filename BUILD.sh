@@ -2,7 +2,7 @@
 set -e
 
 # (C) copyright 2025 Chris Olson AC9KH
-# Builds js8lib and optionally Qt6 for JS8Call on macOS (Apple Silicon)
+# Builds js8lib and optionally Qt6 for JS8Call on MacOS (Apple Silicon)
 
 # --- Variables ---
 LIB_VERSION="3.0"
@@ -25,6 +25,9 @@ if [ ! -d "${PREFIX}" ]; then
     echo "Exiting..."
     exit 1
 fi
+
+# clean the build directory before proceeding
+rm -rf "${PREFIX:?PREFIX is not set or empty}"/*
 
 cd "${SUBMODULES}" && git submodule update --init --recursive
 
