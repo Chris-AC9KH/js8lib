@@ -31,6 +31,11 @@ Copy-Item -Recurse "hamlib-w64-$HAMLIB_VERSION\bin"     "$LIB_DIR\hamlib-$HAMLIB
 Copy-Item -Recurse "hamlib-w64-$HAMLIB_VERSION\include" "$LIB_DIR\hamlib-$HAMLIB_VERSION\include"
 Copy-Item -Recurse "hamlib-w64-$HAMLIB_VERSION\lib"     "$LIB_DIR\hamlib-$HAMLIB_VERSION\lib"
 
+Write-Host "Restructuring Hamlib lib directory..."
+Move-Item "$LIB_DIR\hamlib-$HAMLIB_VERSION\lib\gcc\*" "$LIB_DIR\hamlib-$HAMLIB_VERSION\lib\"
+Remove-Item -Recurse -Force "$LIB_DIR\hamlib-$HAMLIB_VERSION\lib\gcc"
+Remove-Item -Recurse -Force "$LIB_DIR\hamlib-$HAMLIB_VERSION\lib\msvc"
+
 Write-Host "Cleaning up Hamlib artifacts..."
 Remove-Item -Recurse -Force "hamlib-w64-$HAMLIB_VERSION"
 Remove-Item "hamlib.zip"
