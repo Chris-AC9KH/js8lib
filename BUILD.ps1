@@ -2,14 +2,11 @@ $VERSION                  = "3.0"
 $HAMLIB_VERSION           = "4.7.1"
 $LIBUSB_VERSION           = "1.0.29"
 $FFTW3_VERSION            = "3.3.5"
-$BOOST_VERSION_DOT        = "1.88.0"
-$BOOST_VERSION_UNDERSCORE = "1_88_0"
 $BOOST_VERSION_HYPHEN     = "1.88"
 $QT_VERSION               = "6.9.3"
 $LIB_DIR                  = "js8lib$VERSION"
 $QT_LLVM_BIN              = "C:\Qt\$QT_VERSION\llvm-mingw_64\bin"
-
-$QT_TOOLS_BIN = "C:\Qt\Tools\llvm-mingw1706_64\bin"
+$QT_TOOLS_BIN             = "C:\Qt\Tools\llvm-mingw1706_64\bin"
 
 $ErrorActionPreference = "Stop"
 
@@ -97,14 +94,8 @@ Remove-Item -Recurse -Force "fftw3-tmp"
 Remove-Item "fftw3.zip"
 
 # Boost (headers only)
-Write-Host "Fetching Boost $BOOST_VERSION_DOT..."
-Invoke-WebRequest -Uri "https://archives.boost.io/release/$BOOST_VERSION_DOT/source/boost_$BOOST_VERSION_UNDERSCORE.zip" -OutFile "boost.zip"
-
-Write-Host "Extracting Boost (this may take a while)..."
-Expand-Archive -Path "boost.zip" -DestinationPath "."
-
-Write-Host "Building Boost b2 engine and installing headers..."
-Push-Location "boost_$BOOST_VERSION_UNDERSCORE"
+Write-Host "Building Boost headers..."
+Push-Location "boost"
 $env:Path = "$QT_TOOLS_BIN;" + $env:Path
 & ".\bootstrap.bat" "clang"
 & ".\b2.exe" install --with-headers --prefix="..\$LIB_DIR\boost-$BOOST_VERSION_HYPHEN"
@@ -112,13 +103,9 @@ Pop-Location
 
 cls
 Write-Host "--------------------------------------------------------------------"
-Write-Host "         boost-v$BOOST_VERSION_DOT header copy successful........."
+Write-Host "         boost-v$BOOST_VERSION_HYPHEN header copy successful........."
 Write-Host "--------------------------------------------------------------------"
 Start-Sleep -Seconds 3
-
-Write-Host "Cleaning up Boost artifacts..."
-Remove-Item -Recurse -Force "boost_$BOOST_VERSION_UNDERSCORE"
-Remove-Item "boost.zip"
 
 # dll staging folder
 Write-Host "Creating dll staging folder..."
