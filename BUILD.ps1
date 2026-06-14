@@ -1,7 +1,15 @@
-$VERSION = "3.0"
-$HAMLIB_VERSION = "4.7.1"
-$LIBUSB_VERSION = "1.0.29"
-$LIB_DIR = "js8lib$VERSION"
+$VERSION                  = "3.0"
+$HAMLIB_VERSION           = "4.7.1"
+$LIBUSB_VERSION           = "1.0.29"
+$FFTW3_VERSION            = "3.3.5"
+$BOOST_VERSION_DOT        = "1.88.0"
+$BOOST_VERSION_UNDERSCORE = "1_88_0"
+$BOOST_VERSION_HYPHEN     = "1.88"
+$QT_VERSION               = "6.9.3"
+$LIB_DIR                  = "js8lib$VERSION"
+$QT_LLVM_BIN              = "C:\Qt\$QT_VERSION\llvm-mingw_64\bin"
+
+$ErrorActionPreference = "Stop"
 
 if (Test-Path $LIB_DIR) {
     Write-Host "Cleaning up previous build artifacts..."
@@ -11,6 +19,7 @@ if (Test-Path $LIB_DIR) {
 Write-Host "Creating library directory $LIB_DIR..."
 New-Item -ItemType Directory -Path $LIB_DIR | Out-Null
 
+# Hamlib
 Write-Host "Fetching Hamlib $HAMLIB_VERSION..."
 Invoke-WebRequest -Uri "https://github.com/Hamlib/Hamlib/releases/download/$HAMLIB_VERSION/hamlib-w64-$HAMLIB_VERSION.zip" -OutFile "hamlib.zip"
 
@@ -27,6 +36,7 @@ Write-Host "Cleaning up Hamlib artifacts..."
 Remove-Item -Recurse -Force "hamlib-w64-$HAMLIB_VERSION"
 Remove-Item "hamlib.zip"
 
+# libusb
 Write-Host "Fetching libusb $LIBUSB_VERSION..."
 Invoke-WebRequest -Uri "https://github.com/libusb/libusb/releases/download/v$LIBUSB_VERSION/libusb-$LIBUSB_VERSION.7z" -OutFile "libusb.7z"
 
@@ -35,22 +45,23 @@ Write-Host "Extracting libusb..."
 
 Write-Host "Copying libusb to library..."
 New-Item -ItemType Directory -Path "$LIB_DIR\libusb-$LIBUSB_VERSION" | Out-Null
-Copy-Item -Recurse "libusb-$LIBUSB_VERSION\include" "$LIB_DIR\libusb-$LIBUSB_VERSION\include"
-Copy-Item -Recurse "libusb-$LIBUSB_VERSION\MinGW32"          "$LIB_DIR\libusb-$LIBUSB_VERSION\MinGW32"
-Copy-Item -Recurse "libusb-$LIBUSB_VERSION\MinGW64"          "$LIB_DIR\libusb-$LIBUSB_VERSION\MinGW64"
+Copy-Item -Recurse "libusb-$LIBUSB_VERSION\include"            "$LIB_DIR\libusb-$LIBUSB_VERSION\include"
+Copy-Item -Recurse "libusb-$LIBUSB_VERSION\MinGW32"            "$LIB_DIR\libusb-$LIBUSB_VERSION\MinGW32"
+Copy-Item -Recurse "libusb-$LIBUSB_VERSION\MinGW64"            "$LIB_DIR\libusb-$LIBUSB_VERSION\MinGW64"
 Copy-Item -Recurse "libusb-$LIBUSB_VERSION\MinGW-llvm-aarch64" "$LIB_DIR\libusb-$LIBUSB_VERSION\MinGW-llvm-aarch64"
-Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2013"           "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2013"
-Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2015"           "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2015"
-Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2017"           "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2017"
-Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2019"           "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2019"
-Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2022"           "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2022"
-Copy-Item "libusb-$LIBUSB_VERSION\libusb-1.0.def" "$LIB_DIR\libusb-$LIBUSB_VERSION\libusb-1.0.def"
-Copy-Item "libusb-$LIBUSB_VERSION\README.txt"     "$LIB_DIR\libusb-$LIBUSB_VERSION\README.txt"
+Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2013"             "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2013"
+Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2015"             "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2015"
+Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2017"             "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2017"
+Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2019"             "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2019"
+Copy-Item -Recurse "libusb-$LIBUSB_VERSION\VS2022"             "$LIB_DIR\libusb-$LIBUSB_VERSION\VS2022"
+Copy-Item "libusb-$LIBUSB_VERSION\libusb-1.0.def"             "$LIB_DIR\libusb-$LIBUSB_VERSION\libusb-1.0.def"
+Copy-Item "libusb-$LIBUSB_VERSION\README.txt"                  "$LIB_DIR\libusb-$LIBUSB_VERSION\README.txt"
 
 Write-Host "Cleaning up libusb artifacts..."
 Remove-Item -Recurse -Force "libusb-$LIBUSB_VERSION"
 Remove-Item "libusb.7z"
 
+# fftw3
 Write-Host "Fetching fftw3 $FFTW3_VERSION..."
 Invoke-WebRequest -Uri "https://fftw.org/pub/fftw/fftw-$FFTW3_VERSION-dll64.zip" -OutFile "fftw3.zip"
 
@@ -62,19 +73,16 @@ New-Item -ItemType Directory -Path "$LIB_DIR\fftw3\bin"     | Out-Null
 New-Item -ItemType Directory -Path "$LIB_DIR\fftw3\include" | Out-Null
 New-Item -ItemType Directory -Path "$LIB_DIR\fftw3\lib"     | Out-Null
 
-# bin - wisdom executables
 Copy-Item "fftw3-tmp\fftw-wisdom.exe"  "$LIB_DIR\fftw3\bin"
 Copy-Item "fftw3-tmp\fftwf-wisdom.exe" "$LIB_DIR\fftw3\bin"
 Copy-Item "fftw3-tmp\fftwl-wisdom.exe" "$LIB_DIR\fftw3\bin"
 
-# include - headers and Fortran interface files
-Copy-Item "fftw3-tmp\fftw3.f"     "$LIB_DIR\fftw3\include"
-Copy-Item "fftw3-tmp\fftw3.f03"   "$LIB_DIR\fftw3\include"
-Copy-Item "fftw3-tmp\fftw3.h"     "$LIB_DIR\fftw3\include"
-Copy-Item "fftw3-tmp\fftw3l.f03"  "$LIB_DIR\fftw3\include"
-Copy-Item "fftw3-tmp\fftw3q.f03"  "$LIB_DIR\fftw3\include"
+Copy-Item "fftw3-tmp\fftw3.f"    "$LIB_DIR\fftw3\include"
+Copy-Item "fftw3-tmp\fftw3.f03"  "$LIB_DIR\fftw3\include"
+Copy-Item "fftw3-tmp\fftw3.h"    "$LIB_DIR\fftw3\include"
+Copy-Item "fftw3-tmp\fftw3l.f03" "$LIB_DIR\fftw3\include"
+Copy-Item "fftw3-tmp\fftw3q.f03" "$LIB_DIR\fftw3\include"
 
-# lib - import libs and dlls
 Copy-Item "fftw3-tmp\libfftw3-3.def"  "$LIB_DIR\fftw3\lib"
 Copy-Item "fftw3-tmp\libfftw3-3.dll"  "$LIB_DIR\fftw3\lib"
 Copy-Item "fftw3-tmp\libfftw3f-3.def" "$LIB_DIR\fftw3\lib"
@@ -86,3 +94,53 @@ Write-Host "Cleaning up fftw3 artifacts..."
 Remove-Item -Recurse -Force "fftw3-tmp"
 Remove-Item "fftw3.zip"
 
+# Boost (headers only)
+Write-Host "Fetching Boost $BOOST_VERSION_DOT..."
+Invoke-WebRequest -Uri "https://archives.boost.io/release/$BOOST_VERSION_DOT/source/boost_$BOOST_VERSION_UNDERSCORE.zip" -OutFile "boost.zip"
+
+Write-Host "Extracting Boost (this may take a while)..."
+Expand-Archive -Path "boost.zip" -DestinationPath "."
+
+Write-Host "Building Boost b2 engine and installing headers..."
+Push-Location "boost_$BOOST_VERSION_UNDERSCORE"
+& ".\bootstrap.bat"
+& ".\b2.exe" install --with-headers --prefix="..\$LIB_DIR\boost-$BOOST_VERSION_HYPHEN"
+Pop-Location
+
+cls
+Write-Host "--------------------------------------------------------------------"
+Write-Host "         boost-v$BOOST_VERSION_DOT header copy successful........."
+Write-Host "--------------------------------------------------------------------"
+Start-Sleep -Seconds 3
+
+Write-Host "Cleaning up Boost artifacts..."
+Remove-Item -Recurse -Force "boost_$BOOST_VERSION_UNDERSCORE"
+Remove-Item "boost.zip"
+
+# dll staging folder
+Write-Host "Creating dll staging folder..."
+New-Item -ItemType Directory -Path "$LIB_DIR\dll" | Out-Null
+
+Write-Host "Copying Qt LLVM/Clang runtime dlls..."
+Copy-Item "$QT_LLVM_BIN\libc++.dll"    "$LIB_DIR\dll"
+Copy-Item "$QT_LLVM_BIN\libunwind.dll" "$LIB_DIR\dll"
+
+Write-Host "Copying Hamlib runtime dlls..."
+Copy-Item "$LIB_DIR\hamlib-$HAMLIB_VERSION\bin\libhamlib-4.dll"     "$LIB_DIR\dll"
+Copy-Item "$LIB_DIR\hamlib-$HAMLIB_VERSION\bin\libwinpthread-1.dll" "$LIB_DIR\dll"
+
+Write-Host "Copying fftw3 runtime dll..."
+Copy-Item "$LIB_DIR\fftw3\lib\libfftw3f-3.dll" "$LIB_DIR\dll"
+
+Write-Host "Copying libusb runtime dll..."
+Copy-Item "$LIB_DIR\libusb-$LIBUSB_VERSION\MinGW64\dll\libusb-1.0.dll" "$LIB_DIR\dll"
+
+# Final archive
+# Rename to js8lib before archiving so it unzips to just "js8lib"
+Write-Host "Preparing final archive..."
+Rename-Item -Path $LIB_DIR -NewName "js8lib"
+Compress-Archive -Path "js8lib" -DestinationPath "js8lib${VERSION}_Win64.zip"
+
+Write-Host "--------------------------------------------------------------------"
+Write-Host "         js8lib$VERSION Win64 build complete!"
+Write-Host "--------------------------------------------------------------------"
