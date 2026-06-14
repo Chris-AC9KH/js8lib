@@ -9,6 +9,8 @@ $QT_VERSION               = "6.9.3"
 $LIB_DIR                  = "js8lib$VERSION"
 $QT_LLVM_BIN              = "C:\Qt\$QT_VERSION\llvm-mingw_64\bin"
 
+$MSVC_BIN = "C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.51.36231\bin\Hostarm64\arm64"
+
 $ErrorActionPreference = "Stop"
 
 if (Test-Path $LIB_DIR) {
@@ -103,6 +105,7 @@ Expand-Archive -Path "boost.zip" -DestinationPath "."
 
 Write-Host "Building Boost b2 engine and installing headers..."
 Push-Location "boost_$BOOST_VERSION_UNDERSCORE"
+$env:Path = "$MSVC_BIN;" + $env:Path
 & ".\bootstrap.bat"
 & ".\b2.exe" install --with-headers --prefix="..\$LIB_DIR\boost-$BOOST_VERSION_HYPHEN"
 Pop-Location
