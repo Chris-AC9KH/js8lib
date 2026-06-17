@@ -5,8 +5,8 @@ set -e
 # Builds js8lib and optionally Qt6 for JS8Call on MacOS (Apple Silicon)
 
 # --- Variables ---
-LIB_VERSION="3.0"
-QT_VERSION="6.9.3"
+LIB_VERSION="4.0"
+QT_VERSION="6.11.1"
 QT_TAG="v${QT_VERSION}"
 MACOS_MIN="14.0"
 PREFIX="/usr/local/js8lib"
