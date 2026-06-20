@@ -1,12 +1,11 @@
-# JS8Call Developer's Submodule Repository
+# JS8Call Developer's Submodule Repository for MacOS
 
 - This repository is only for JS8Call developers to build and package pre-built libraries for JS8Call. It is not intended for end users
 to build the code.
 - The base repository contains the source code for FFTW-3.3.10 and Boost 1.88.0
 - Hamlib and libusb are obtained as submodules with `git submodule update --init --recursive' by
-running the BUILD.sh script for MacOS. Building Qt 6.9.3 is optional.
-- Note the script will ask if you are building universal or architecture-dependent libraries. If you are on an Intel Mac you must select
-no or the build will fail.
+running the BUILD.sh script for MacOS. Building Qt 6.11.1 is optional.
+- Note: building universal dual-architecture libraries is no longer supported. This script will not run on an Intel Mac due to the last version of Qt being supported on Intel Mac is 6.8.3
 
 # Building and Creating a JS8Call Library Package
 - To build a library package you must create the proper directory structure on your development machine. The following command will
@@ -18,7 +17,7 @@ git clone https://github.com/JS8Call-improved/js8lib.git submodules
 - cd into submodules and run the BUILD.sh script with `./BUILD.sh`. If the build is successful it will create a gzipped tar archive of the
 library build in the root of your development folder. Depending on the capabilities of your build machine this can take a long time.
 
--Note: the script will check out the 6.9.3 Qt branch by default. If you wish to build a different version of Qt, modify the script before running it to check out the version of Qt that you want.
+-Note: the script will check out the 6.11.1 Qt branch by default. If you wish to build a different version of Qt, modify the script before running it to check out the version of Qt that you want.
 
 - After the build completes you can validate the library build by building JS8Call with: `-prefix /usr/local/js8lib` for your build.
 

@@ -127,9 +127,9 @@ rsync -arvz /usr/local/js8lib/ ./js8lib/
 
 # Create downloadable pre-built library archive
 if [ "$qt" = "y" ]; then
-    tar -czvf js8lib${LIB_VERSION}-MacOS_AppleSilicon_Qt.tar.gz js8lib
+    tar -czvf js8lib${LIB_VERSION}-MacOS_with_Qt.tar.gz js8lib
 else
-    tar -czvf js8lib${LIB_VERSION}-MacOS_AppleSilicon.tar.gz js8lib
+    tar -czvf js8lib${LIB_VERSION}-MacOS_no_Qt.tar.gz js8lib
 fi
 
 # Clean up build artifacts
