@@ -11,3 +11,7 @@ to build the code.
 
 - Create a new working branch, or select one of the current working branches
 - Modify build scripts, submodule versions or base code versions to build custom pre-built libraries as necessary
+- Current library version is v4.0 for all the working branches:
+- MacOS_4.0
+- Windows_4.0
+- Linux_4.0
