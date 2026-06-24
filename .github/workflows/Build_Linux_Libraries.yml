@@ -1,0 +1,36 @@
+name: Build Linux Libraries
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build js8lib (${{ matrix.arch }})
+    runs-on: ${{ matrix.runner }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: x86_64
+            runner: ubuntu-24.04
+          - arch: arm64
+            runner: ubuntu-24.04-arm
+
+    steps:
+      - name: Checkout repository with submodules
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Run js8lib build script
+        run: |
+          chmod +x ./Distribution_package_js8lib.sh
+          ./Distribution_package_js8lib.sh
+          
+      - name: Upload tarball artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: js8lib4.0-Linux_${{ matrix.arch }}_pkg
+          path: ~/js8lib*-Linux_*_pkg.tar.gz
+          archive: false

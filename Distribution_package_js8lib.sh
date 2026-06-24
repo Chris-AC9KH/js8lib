@@ -119,7 +119,7 @@ sleep 3
 
 # --- Stage and package ---
 STAGING="$HOME/js8lib_staging"
-TARBALL="js8lib3.0-Linux_${ARCH}_pkg.tar.gz"
+TARBALL="js8lib4.0-Linux_${ARCH}_pkg.tar.gz"
 
 rm -rf "${STAGING}"
 mkdir -p "${STAGING}/js8lib"
