@@ -32,7 +32,7 @@ echo "Installing build dependencies..."
 sudo apt-get update
 sudo apt-get install -y \
     build-essential pkgconf autoconf libtool automake texinfo \
-    libusb-1.0-0-dev
+    libusb-1.0-0-dev libudev-dev
 
 echo "--------------------------------------------------------------------"
 echo "         Building js8lib........."
