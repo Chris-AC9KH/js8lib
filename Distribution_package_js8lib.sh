@@ -1,7 +1,6 @@
 #!/bin/bash
 set -e
 
-clear
 echo "--------------------------------------------------------------------"
 echo "         Building js8lib for JS8Call package maintainers"
 echo "         Build host: Ubuntu 24 Server ONLY"
@@ -35,7 +34,6 @@ sudo apt-get install -y \
     build-essential pkgconf autoconf libtool automake texinfo \
     libusb-1.0-0-dev
 
-clear
 echo "--------------------------------------------------------------------"
 echo "         Building js8lib........."
 echo "--------------------------------------------------------------------"
@@ -67,7 +65,7 @@ cd "${SUBMODULES}/libusb"
 ./configure --prefix="${PREFIX}"
 make && sudo make install
 make clean
-clear
+
 echo "--------------------------------------------------------------------"
 echo "         libusb-v1.0.29 build successful........."
 echo "--------------------------------------------------------------------"
@@ -79,7 +77,7 @@ cd "${SUBMODULES}/Hamlib"
 ./configure --prefix="${PREFIX}"
 make && sudo make install
 make clean
-clear
+
 echo "--------------------------------------------------------------------"
 echo "         Hamlib-v4.7.2 build successful........."
 echo "--------------------------------------------------------------------"
@@ -90,7 +88,7 @@ cd "${SUBMODULES}/fftw"
 ./configure --prefix="${PREFIX}" --enable-single --enable-threads
 make && sudo make install
 make clean
-clear
+
 echo "--------------------------------------------------------------------"
 echo "         fftw-v3.3.10 build successful........."
 echo "--------------------------------------------------------------------"
@@ -100,7 +98,7 @@ sleep 3
 cd "${SUBMODULES}/boost"
 ./bootstrap.sh --prefix="${PREFIX}"
 sudo ./b2 install --with-headers
-clear
+
 echo "--------------------------------------------------------------------"
 echo "         boost-v1.88.0 header copy successful........."
 echo "--------------------------------------------------------------------"
@@ -111,7 +109,6 @@ cd "${SUBMODULES}"
 git submodule foreach --recursive git clean -fdx
 cd ..
 
-clear
 echo "--------------------------------------------------------------------"
 echo "         Syncing libraries to tarball staging area..."
 echo "--------------------------------------------------------------------"
@@ -131,7 +128,6 @@ tar -czvf "$HOME/${TARBALL}" js8lib
 
 rm -rf "${STAGING}"
 
-clear
 echo "--------------------------------------------------------------------"
 echo "   DONE!"
 echo "   Library archive: $HOME/${TARBALL}"
