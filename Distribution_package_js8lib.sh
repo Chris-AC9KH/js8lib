@@ -81,7 +81,7 @@ make && sudo make install
 make clean
 clear
 echo "--------------------------------------------------------------------"
-echo "         Hamlib-v4.7.1 build successful........."
+echo "         Hamlib-v4.7.2 build successful........."
 echo "--------------------------------------------------------------------"
 sleep 3
 
