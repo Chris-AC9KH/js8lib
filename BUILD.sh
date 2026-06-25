@@ -8,7 +8,7 @@ set -e
 LIB_VERSION="3.0"
 QT_VERSION="6.9.3"
 QT_TAG="v${QT_VERSION}"
-MACOS_MIN="14.0"
+MACOS_MIN="12.0"
 PREFIX="/usr/local/js8lib"
 SUBMODULES=$(pwd)
 
