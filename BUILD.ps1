@@ -1,5 +1,5 @@
 $VERSION                  = "3.0"
-$HAMLIB_VERSION           = "4.7.1"
+$HAMLIB_VERSION           = "4.7.2"
 $LIBUSB_VERSION           = "1.0.29"
 $FFTW3_VERSION            = "3.3.5"
 $BOOST_VERSION_HYPHEN     = "1.88"
