@@ -5,10 +5,14 @@ set -e
 # Builds js8lib and optionally Qt6 for JS8Call on MacOS (Apple Silicon)
 
 # --- Variables ---
+# set these to configure the build
 LIB_VERSION="3.0"
 QT_VERSION="6.9.3"
-QT_TAG="v${QT_VERSION}"
+HAMLIB_TAG="4.7.2"
 MACOS_MIN="12.0"
+
+# these variables aren't normally changed
+QT_TAG="v${QT_VERSION}"
 PREFIX="/usr/local/js8lib"
 SUBMODULES=$(pwd)
 
@@ -32,45 +36,61 @@ rm -rf "${PREFIX:?PREFIX is not set or empty}"/*
 cd "${SUBMODULES}" && git submodule update --init --recursive
 
 ####### Build libusb #######
-cd "${SUBMODULES}/libusb"
+cd "${SUBMODULES}/libusb" || exit 1
 ./bootstrap.sh
-./configure CFLAGS="-mmacosx-version-min=${MACOS_MIN}" --prefix="${PREFIX}"
-make && make install
+./configure CFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            CXXFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            LDFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            --prefix="${PREFIX}"
+            
+make -j"${NCPU}" && make install
 make clean
-clear
+
 echo "--------------------------------------------------------------------"
 echo "         libusb-v1.0.29 build successful........."
 echo "--------------------------------------------------------------------"
 sleep 3
 
 ####### Build Hamlib #######
-cd "${SUBMODULES}/Hamlib"
+cd "${SUBMODULES}/Hamlib" || exit 1
+git checkout "${HAMLIB_TAG}"
+
 ./bootstrap
-./configure CFLAGS="-mmacosx-version-min=${MACOS_MIN}" --prefix="${PREFIX}"
-make && make install
+./configure CFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            CXXFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            LDFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            --prefix="${PREFIX}"
+
+make -j"${NCPU}" && make install
 make clean
-clear
+
 echo "--------------------------------------------------------------------"
-echo "         Hamlib-v4.7.1 build successful........."
+echo "         Hamlib ${HAMLIB_TAG} build successful........."
 echo "--------------------------------------------------------------------"
 sleep 3
 
 ####### Build fftw #######
-cd "${SUBMODULES}/fftw"
-./configure CFLAGS="-mmacosx-version-min=${MACOS_MIN}" --prefix="${PREFIX}" --enable-single --enable-threads
-make && make install
+cd "${SUBMODULES}/fftw" || exit 1
+
+./configure CFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            CXXFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            LDFLAGS="-mmacosx-version-min=${MACOS_MIN}" \
+            --prefix="${PREFIX}" \
+            --enable-single --enable-threads
+            
+make -j"${NCPU}" && make install
 make clean
-clear
+
 echo "--------------------------------------------------------------------"
 echo "         fftw-v3.3.10 build successful........."
 echo "--------------------------------------------------------------------"
 sleep 3
 
 ####### Build boost (headers only) #######
-cd "${SUBMODULES}/boost"
+cd "${SUBMODULES}/boost" || exit 1
 ./bootstrap.sh --prefix="${PREFIX}"
 ./b2 install --with-headers
-clear
+
 echo "--------------------------------------------------------------------"
 echo "         boost-v1.88.0 header copy successful........."
 echo "--------------------------------------------------------------------"
@@ -92,7 +112,7 @@ if [ "$qt" = "y" ]; then
         -ffmpeg-deploy
     cmake --build . --parallel
     cmake --install .
-    clear
+
     echo "--------------------------------------------------------------------"
     echo "         Qt ${QT_VERSION} build successful........."
     echo "--------------------------------------------------------------------"
@@ -108,7 +128,6 @@ else
     cd ..
 fi
 
-clear
 echo "--------------------------------------------------------------------"
 echo "syncing libraries............."
 echo "setting linker @rpath relative values for embedded libraries......"
@@ -127,9 +146,9 @@ rsync -arvz /usr/local/js8lib/ ./js8lib/
 
 # Create downloadable pre-built library archive
 if [ "$qt" = "y" ]; then
-    tar -czvf js8lib${LIB_VERSION}-MacOS_AppleSilicon_Qt.tar.gz js8lib
+    tar -czvf js8lib${LIB_VERSION}-MacOS_with_Qt.tar.gz js8lib
 else
-    tar -czvf js8lib${LIB_VERSION}-MacOS_AppleSilicon.tar.gz js8lib
+    tar -czvf js8lib${LIB_VERSION}-MacOS_no_Qt.tar.gz js8lib
 fi
 
 # Clean up build artifacts
