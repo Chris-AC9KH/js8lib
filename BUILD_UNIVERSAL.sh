@@ -111,7 +111,7 @@ if [ "$qt" = "y" ]; then
     
     # For Qt 6 / CMake, pass the architectures via CMAKE_OSX_ARCHITECTURES
     "${SUBMODULES}/Qt6/configure" -prefix "${PREFIX}" \
-        -ffmpeg-dir /usr/local/ffmpeg \
+        -ffmpeg-dir /usr/local/ffmpeg-universal \
         -ffmpeg-deploy \
         -- -DCMAKE_OSX_ARCHITECTURES="arm64;x86_64" \
            -DCMAKE_OSX_DEPLOYMENT_TARGET="${MACOS_MIN}"
