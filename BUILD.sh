@@ -15,6 +15,7 @@ MACOS_MIN="14.0"
 QT_TAG="v${QT_VERSION}"
 PREFIX="/usr/local/js8lib"
 SUBMODULES=$(pwd)
+NCPU=$(sysctl -n hw.ncpu)
 
 clear
 echo "--------------------------------------------------------------------"
