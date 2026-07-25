@@ -1,8 +1,21 @@
 #!/bin/bash
 set -e
 
+# (C) copyright 2025 Chris Olson AC9KH
+# Builds js8lib base dependencies for JS8Call on Linux (package maintainers)
+# Runs on a local Ubuntu 24 machine OR via GitHub Actions workflow.
+# No Qt build option here by design — Qt is handled by a separate script.
+
+# --- Variables ---
+# set these to configure the build
+LIB_VERSION="4.0"
+HAMLIB_TAG="4.7.2"
+LIBUSB_TAG="v1.0.29"
+FFTW_VERSION="3.3.10"
+BOOST_VERSION="1.88.0"
+
 echo "--------------------------------------------------------------------"
-echo "         Building js8lib for JS8Call package maintainers"
+echo "         Building js8lib ${LIB_VERSION} for JS8Call package maintainers"
 echo "         Build host: Ubuntu 24 Server ONLY"
 echo "         DO NOT run this script as root"
 echo "--------------------------------------------------------------------"
@@ -70,19 +83,21 @@ make && sudo make install
 make clean
 
 echo "--------------------------------------------------------------------"
-echo "         libusb-v1.0.29 build successful........."
+echo "         libusb-${LIBUSB_TAG} build successful........."
 echo "--------------------------------------------------------------------"
 sleep 3
 
 ####### Build Hamlib #######
 cd "${SUBMODULES}/Hamlib"
+git fetch --depth 1 origin tag "${HAMLIB_TAG}"
+git checkout "${HAMLIB_TAG}"
 ./bootstrap
 ./configure --prefix="${PREFIX}"
 make && sudo make install
 make clean
 
 echo "--------------------------------------------------------------------"
-echo "         Hamlib-v4.7.2 build successful........."
+echo "         Hamlib-${HAMLIB_TAG} build successful........."
 echo "--------------------------------------------------------------------"
 sleep 3
 
@@ -93,7 +108,7 @@ make && sudo make install
 make clean
 
 echo "--------------------------------------------------------------------"
-echo "         fftw-v3.3.10 build successful........."
+echo "         fftw-v${FFTW_VERSION} build successful........."
 echo "--------------------------------------------------------------------"
 sleep 3
 
@@ -103,7 +118,7 @@ cd "${SUBMODULES}/boost"
 sudo ./b2 install --with-headers
 
 echo "--------------------------------------------------------------------"
-echo "         boost-v1.88.0 header copy successful........."
+echo "         boost-v${BOOST_VERSION} header copy successful........."
 echo "--------------------------------------------------------------------"
 sleep 3
 
@@ -119,7 +134,7 @@ sleep 3
 
 # --- Stage and package ---
 STAGING="$HOME/js8lib_staging"
-TARBALL="js8lib4.0-Linux_${ARCH}_pkg.tar.gz"
+TARBALL="js8lib${LIB_VERSION}-Linux_${ARCH}_pkg.tar.gz"
 
 rm -rf "${STAGING}"
 mkdir -p "${STAGING}/js8lib"
@@ -138,6 +153,6 @@ echo ""
 echo "   It is recommended to validate this build by building JS8Call"
 echo "   using ${PREFIX} as CMAKE_PREFIX_PATH before releasing."
 echo ""
-echo "   Qt 6.9.3 is NOT included — run the Qt build script separately."
+echo "   Qt is NOT included — run the Qt build script separately."
 echo "   Qt installs to ${PREFIX}/Qt"
 echo "--------------------------------------------------------------------"
