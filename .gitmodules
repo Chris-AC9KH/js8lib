@@ -3,4 +3,4 @@
 	url = https://github.com/JS8Call-improved/libusb.git
 [submodule "Hamlib"]
 	path = Hamlib
-	url = https://github.com/JS8Call-improved/Hamlib.git
+	url = https://github.com/Hamlib/Hamlib.git
