@@ -81,11 +81,14 @@ install_deps() {
 
 install_deps
 
-# --- Create prefix directory owned by root ---
-if [ ! -d "$PREFIX" ]; then
-    echo "Creating $PREFIX..."
-    sudo mkdir -p "$PREFIX"
+# --- Clean and recreate prefix directory before building ---
+if [ -d "$PREFIX" ] && [ -n "$PREFIX" ]; then
+    echo "Prefix $PREFIX already exists. Performing fresh wipe..."
+    sudo rm -rf "$PREFIX"
 fi
+
+echo "Creating clean $PREFIX..."
+sudo mkdir -p "$PREFIX"
 sudo chown root:root "$PREFIX"
 
 # --- FFmpeg ---
