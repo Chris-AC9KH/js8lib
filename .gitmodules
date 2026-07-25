@@ -1,6 +1,6 @@
 [submodule "submodules/Hamlib"]
 	path = submodules/Hamlib
-	url = https://github.com/JS8Call-improved/Hamlib.git
+	url = https://github.com/Hamlib/Hamlib.git
 [submodule "submodules/libusb"]
 	path = submodules/libusb
 	url = https://github.com/JS8Call-improved/libusb.git
