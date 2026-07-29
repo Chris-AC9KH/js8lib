@@ -7,7 +7,7 @@ set -e
 # --- Variables ---
 # set these to configure the build
 LIB_VERSION="4.0"
-QT_VERSION="6.11.1"
+QT_VERSION="6.12.0-beta2"
 HAMLIB_TAG="4.7.2"
 MACOS_MIN="14.0"
 
