@@ -59,6 +59,7 @@ install_deps() {
         libwayland-dev wayland-protocols \
         libxkbcommon-dev libxkbcommon-x11-dev \
         libgl-dev libgl1-mesa-dev libegl-dev libgbm-dev \
+        libopengl-dev \
         libdrm-dev libinput-dev \
         libxcb1-dev libx11-xcb-dev \
         libxcb-glx0-dev libxcb-xkb-dev \
