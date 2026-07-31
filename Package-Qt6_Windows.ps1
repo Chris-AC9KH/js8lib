@@ -1,12 +1,12 @@
 # ==============================================================================
-# Fixed PowerShell Script: Pack Qt 6.11.1 for GitHub Runners
+# Fixed PowerShell Script: Pack Qt 6.12.0-beta2 for GitHub Runners
 # ==============================================================================
 $ErrorActionPreference = "Stop"
 
 # --- Configuration Paths ---
-$QtInstallDir = "C:\Qt\6.11.1\llvm-mingw_64"   # Adjust if yours is different
+$QtInstallDir = "C:\Qt\6.12.0\llvm-mingw_64"   # Adjust if yours is different
 $ZipOutputDir = "C:\Qt\Archive"
-$ZipFileName  = "qt-6.11.1-windows-x64.zip"
+$ZipFileName  = "qt-6.12.0-windows-x64.zip"
 
 # 1. Ensure Output Directory Exists
 if (!(Test-Path $ZipOutputDir)) { 
