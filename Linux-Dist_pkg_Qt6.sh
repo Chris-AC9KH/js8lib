@@ -93,19 +93,34 @@ sudo mkdir -p "$PREFIX"
 sudo chown root:root "$PREFIX"
 
 # --- FFmpeg ---
-mkdir -p "$HOME/development"
-cd "$HOME/development"
-git clone --branch n7.1.3 https://git.ffmpeg.org/ffmpeg.git
-cd ffmpeg
-./configure \
-    --prefix=/usr/local/ffmpeg \
-    --enable-gpl \
-    --enable-shared \
-    --disable-static
-make -j$(nproc)
-sudo make install
-
 export PKG_CONFIG_PATH=/usr/local/ffmpeg/lib/pkgconfig:$PKG_CONFIG_PATH
+
+echo "Checking for existing FFmpeg installation..."
+if pkg-config --exists libavcodec libavformat libavutil libswscale; then
+    FFMPEG_VER=$(pkg-config --modversion libavcodec)
+    echo "######################################################################"
+    echo " Found existing FFmpeg installation (libavcodec v$FFMPEG_VER)."
+    echo " Skipping FFmpeg compilation."
+    echo "######################################################################"
+else
+    echo "FFmpeg not found or incomplete. Starting compilation..."
+    mkdir -p "$HOME/development"
+    cd "$HOME/development"
+    
+    # Clean old source directory if it exists to avoid build pollution
+    if [ -d "ffmpeg" ]; then rm -rf ffmpeg; fi
+    
+    git clone --branch n7.1.3 https://ffmpeg.org
+    cd ffmpeg
+    ./configure \
+        --prefix=/usr/local/ffmpeg \
+        --enable-gpl \
+        --enable-shared \
+        --disable-static
+    make -j$(nproc)
+    sudo make install
+    echo "FFmpeg compilation and installation complete."
+fi
 
 # --- Qt6 source ---
 cd "$HOME/development"
