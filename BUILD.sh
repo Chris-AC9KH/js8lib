@@ -9,7 +9,7 @@ set -e
 LIB_VERSION="4.0"
 QT_VERSION="6.12.0-beta2"
 HAMLIB_TAG="4.7.2"
-MACOS_MIN="14.0"
+MACOS_MIN="14.4"
 
 # these variables aren't normally changed
 QT_TAG="v${QT_VERSION}"
