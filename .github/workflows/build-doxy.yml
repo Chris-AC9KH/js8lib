@@ -1,0 +1,70 @@
+name: Build Doxygen
+
+# Manual, one-off job: build doxygen from source on ubuntu-24.04
+# (the same base image build_docs.yml runs on), package the binary,
+# and publish it as a release asset on the js8lib repo.
+#
+# Run this again only when you want to bump the doxygen version.
+
+on:
+  workflow_dispatch:
+    inputs:
+      doxygen_version:
+        description: 'Doxygen version to build (e.g. 1.16.1)'
+        required: true
+        default: '1.16.1'
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Install build deps
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y doxygen graphviz flex bison make cmake g++ wget
+
+      - name: Build doxygen
+        env:
+          DOXY_VER: ${{ github.event.inputs.doxygen_version }}
+        run: |
+          set -euo pipefail
+          DOXY_TAG="Release_${DOXY_VER//./_}"
+          cd /tmp
+          wget "https://github.com/doxygen/doxygen/releases/download/${DOXY_TAG}/doxygen-${DOXY_VER}.src.tar.gz"
+          tar zxf "doxygen-${DOXY_VER}.src.tar.gz"
+          cd "doxygen-${DOXY_VER}"
+          mkdir build && cd build
+          cmake -G "Unix Makefiles" -DCMAKE_INSTALL_PREFIX=/tmp/doxy-install ..
+          make -j"$(nproc)"
+          make install
+
+      - name: Inspect runtime dependencies
+        run: |
+          echo "--- ldd on built binary ---"
+          ldd /tmp/doxy-install/bin/doxygen || true
+
+      - name: Package tarball
+        env:
+          DOXY_VER: ${{ github.event.inputs.doxygen_version }}
+        run: |
+          set -euo pipefail
+          ASSET="doxygen-${DOXY_VER}.tar.gz"
+          tar -C /tmp/doxy-install -czf "/tmp/${ASSET}" .
+          ( cd /tmp && sha256sum "${ASSET}" > "${ASSET}.sha256" )
+          echo "ASSET_NAME=${ASSET}" >> "$GITHUB_ENV"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.ASSET_NAME }}
+          path: /tmp/${{ env.ASSET_NAME }}
+          archive: false
+          retention-days: 14
+
+      - name: Upload checksum artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ env.ASSET_NAME }}.sha256
+          path: /tmp/${{ env.ASSET_NAME }}.sha256
+          archive: false
+          retention-days: 14
