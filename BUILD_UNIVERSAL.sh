@@ -6,9 +6,9 @@ set -e
 
 # --- Variables ---
 LIB_VERSION="4.0"
-QT_VERSION="6.11.1"
+QT_VERSION="6.11.2"
 HAMLIB_TAG="4.7.2"
-MACOS_MIN="14.0"
+MACOS_MIN="14.4"
 
 # Target dual architectures
 UNIVERSAL_FLAGS="-arch arm64 -arch x86_64 -mmacosx-version-min=${MACOS_MIN}"
